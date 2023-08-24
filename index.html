@@ -1,31 +1,114 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Form Example</title>
+        <title>MovieSearch</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+			font-family: serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        form {
+            text-align: center;
+            margin: 20px auto;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .movie-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .movie-table th, .movie-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        img {
+            max-width: 500px;
+            max-height: 550px;
+        }
+
+        #tableContainer {
+            text-align: center;
+            margin: 20px auto;
+        }
+    </style>
     </head>
     <body>
         <h1>Consult movie</h1>
-        <form action="/hello">
-            <label for="name">Movie:</label><br>
-            <input type="text" id="name" name="name" value="thor"><br><br>
-            <input type="button" value="Submit" onclick="loadGetMsg()">
+        <form action="/movie">
+            <input type="text" id="name" name="name" onkeydown="handleKeyDown(event)">
+            <input type="button" value="Search" onclick="loadGetMsg()">
         </form> 
-        <div id="getrespmsg"></div>
+        <div id="tableContainer"></div>
 
         <script>
-            function loadGetMsg() {
-                let nameVar = document.getElementById("name").value;
-                const url = `http://localhost:35000/movie?name=${nameVar}`;
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function() {
-                    document.getElementById("getrespmsg").innerHTML =
-                    this.responseText;
-                }
-                xhttp.open("GET", url, true);
-                xhttp.send();
-            }
+			//Funcion para que al darle a la tecla enter tambien cargue la funcion loadGetMsg
+			function handleKeyDown(event) {
+				if (event.keyCode === 13) {
+					event.preventDefault(); // Evita que el formulario se envíe
+				}
+			}
+			//Funcion para llamar al servidor y con la URL local
+			function loadGetMsg() {
+				let nameVar = document.getElementById("name").value;
+				const url = `http://localhost:35000/movie?name=${nameVar}`;
+				const xhttp = new XMLHttpRequest();
+				xhttp.onload = function() {
+						const responseData = JSON.parse(this.responseText);
+					displayTable(responseData);
+				}
+				xhttp.open("GET", url, true);
+				xhttp.send();
+			}
+			//Funcion para crear la tabla que recibe la data de la peticion al servidor y mapea los datos de forma organizada
+			function displayTable(data) {
+				const tableContainer = document.getElementById("tableContainer");
+				tableContainer.innerHTML = "";
+
+				if (data && data.Response === "True") {
+					const img = document.createElement("img");
+					img.src = data.Poster;
+					img.alt = "Movie Poster";
+					tableContainer.appendChild(img);
+
+					const table = document.createElement("table");
+					table.className = "movie-table";
+
+					const headerRow = table.insertRow();
+					const columnsShow = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director", "Writer", "Actors", "Plot", "Language", "Country", "Awards", "Metascore", "imdbRating", "imdbVotes", "BoxOffice"];
+					columnsShow.forEach(column => {
+						const headerCell = headerRow.insertCell();
+						headerCell.textContent = column;
+					});
+
+					const dataRow = table.insertRow();
+					columnsShow.forEach(column => {
+						const cell = dataRow.insertCell();
+						cell.textContent = data[column];
+					});
+
+					tableContainer.appendChild(table);
+				} else {
+					tableContainer.textContent = "No se encuentran resultados.";
+				}
+			}
         </script>
     </body>
 </html>
