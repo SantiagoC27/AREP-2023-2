@@ -18,12 +18,11 @@ mvn compile
 
 ## Run server
 
-1. Para ejecutar el servidor, una vez realizados los pasos anteriores use el siguiente comando
+1. Para ejecutar el servidor, una vez realizados los pasos anteriores use el siguiente comando en caso de fallo usar el segundo
 
 ```
 mvn exec:java
 ```
-###### 1.1 En caso de que el comando falle usar
 
 ```
 mvn compile exec:java
