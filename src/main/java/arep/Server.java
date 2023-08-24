@@ -39,7 +39,6 @@ public class Server {
                         if (fristLine) {
                             fristLine = false;
                             path = inputLine.split(" ")[1];
-                            movieName = inputLine.split("=")[1].split(" ")[0];
                         }
                         if (!in.ready()) {
                             break;
@@ -47,7 +46,12 @@ public class Server {
                     }
 
                     if (path.startsWith("/movie?name=")) {
-                        outputLine = respGetOK(webService.getMovie(movieName));
+                        movieName = path.split("=")[1].split(" ")[0];
+                        outputLine = respGetOK(webService.getMovie(movieName),"application/json");
+                    } else if (path.startsWith("/*/")){
+                        //img/ext
+                        String file = path.split("/")[2];
+                        outputLine = respGetOK(webService.readFiles(file),"text/html");
                     }
 
                     out.println(outputLine);
@@ -66,12 +70,12 @@ public class Server {
         cache.closeTimer();
     }
 
-    public static String respGetOK(String jContent) {
+    public static String respGetOK(String jContent, String ContentType) {
         return "HTTP/1.1 200 OK \r\n" +
                 "Access-Control-Allow-Origin: * \r\n" +
                 "Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE \r\n" +
                 "Access-Control-Allow-Headers: Content-Type, Authorization \r\n" +
-                "Content-Type: application/json \r\n" +
+                "Content-Type:" + ContentType + "\r\n" +
                 "\r\n" +
                 jContent;
 

@@ -1,18 +1,16 @@
 package arep.Service;
 
 import arep.Cache.ICache;
-import arep.Cache.MovieCache;
 import arep.MovieException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 public class WebService {
 
-    private ICache cache;
+    private final ICache cache;
 
     public WebService(ICache cache) {
         this.cache = cache;
@@ -53,5 +51,21 @@ public class WebService {
             System.out.println("Request failed with response code: " + responseCode);
             return null;
         }
+    }
+
+    public String readFiles(String fileName) {
+        StringBuilder content = new StringBuilder();
+        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/" + fileName)) {
+            if (inputStream == null) throw new IOException();
+            Scanner scanner = new Scanner(inputStream, "UTF-8");
+
+            while (scanner.hasNextLine()) {
+                content.append(scanner.nextLine()).append("\n");
+            }
+
+        } catch (IOException ignored) {
+        }
+
+        return content.toString();
     }
 }
