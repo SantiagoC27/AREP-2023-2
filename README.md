@@ -23,7 +23,7 @@ mvn compile
 ```
 mvn exec:java
 ```
-1.1 En caso de que el comando falle usar
+###### 1.1 En caso de que el comando falle usar
 
 ```
 mvn compile exec:java
