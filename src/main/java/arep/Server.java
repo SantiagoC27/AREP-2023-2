@@ -12,6 +12,7 @@ import arep.Service.WebService;
 
 public class Server {
     public static void main(String[] args) throws IOException, MovieException {
+        System.out.println("Server is up and running. Listening on port 35000...");
         ServerSocket serverSocket = null;
         MovieCache cache = new MovieCache(15 * 60 * 1000);
         WebService webService = new WebService(cache);

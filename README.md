@@ -23,6 +23,11 @@ mvn compile
 ```
 mvn exec:java
 ```
+1.1 En caso de que el comando falle usar
+
+```
+mvn compile exec:java
+```
 
 2. Para acceder a la pagina una vez realizado el paso anterior abre el index.html, y ya puede buscar la informacion de la pelicula que desee.
 
