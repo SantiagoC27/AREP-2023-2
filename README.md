@@ -1,4 +1,4 @@
-# Laboratorio 1
+# Laboratorio 2
 
 Implementación sobre un servidor de fachada que consume una API REST que traera datos de las películas que se encuentren en el sistema.
 
